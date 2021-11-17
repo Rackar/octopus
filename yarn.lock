@@ -1144,6 +1144,11 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
+"@metamask/detect-provider@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.npmmirror.com/@metamask/detect-provider/download/@metamask/detect-provider-1.2.0.tgz#3667a7531f2a682e3c3a43eaf3a1958bdb42a696"
+  integrity sha1-NmenUx8qaC48OkPq86GVi9tCppY=
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npm.taobao.org/@mrmlnc/readdir-enhanced/download/@mrmlnc/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

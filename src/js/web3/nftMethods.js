@@ -1,6 +1,6 @@
-import { web3instance } from './getWeb3';
-import { address_GAME } from '../contract';
-import { api, base } from '../boot/axios';
+import { web3instance } from "./getWeb3";
+import { address_GAME } from "../contract";
+import { api, base } from "../boot/axios";
 
 function awardItem(userAdress) {
   return new Promise(async (resolve, reject) => {
@@ -8,21 +8,20 @@ function awardItem(userAdress) {
     index = parseInt(index) + 1;
     console.log(web3instance);
     web3instance.nftContract.methods
-      .awardItem(userAdress, `${base}nfts?id=${index}`)
+      .awardItem(userAdress, base + "nfts?id=" + index)
       .send({
         from: userAdress,
       })
-      .then(async result => {
-        const res = result.events.Transfer.returnValues;
+      .then(async function (result) {
+        let res = result.events.Transfer.returnValues;
         if (res.tokenId != index) {
-          console.log('NFT入库tokenURI id矛盾');
+          console.log("NFT入库tokenURI id矛盾");
           return;
         }
-
-        console.log(`NFT status: ${JSON.stringify(result)}`);
+        console.log("NFT status: " + JSON.stringify(result));
         resolve(index);
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         reject(e);
       });
@@ -34,10 +33,10 @@ function approve2(tokenId, userAdress) {
     web3instance.nftContract.methods
       .approve(address_DNFT, tokenId)
       .send({ from: userAdress })
-      .then(result => {
+      .then(function (result) {
         resolve(result);
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         reject(e);
       });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref, reactive, computed, nextTick } from 'vue';
+import { ref, Ref, reactive, computed, nextTick, onMounted } from 'vue';
 
 const flow = reactive({
   typing: '',

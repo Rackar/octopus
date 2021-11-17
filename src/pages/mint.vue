@@ -1,8 +1,10 @@
 <template>
   <div>
-    <h3 class>Octopus Game Token Miner</h3>
-
+    <h3 class>Want to:</h3>
     <div>
+      <div class="text-red-500" v-if="!store.state.login">
+        You need to login to mint tokens.
+      </div>
       <div>
         <div class="my-4">
           <span
@@ -18,9 +20,11 @@
               cursor-pointer
               select-none
             "
+            @click="btnMintCoin"
             >Mint</span
           >
-          Power:500 (mint 500 OCGT in 24h) (minting count down: 23:59:59)
+          Power:500 (Mint ends in:
+          {{ info.currentMintingCountDown }})
         </div>
         <div class="my-4">
           <span
@@ -54,15 +58,19 @@
               cursor-pointer
               select-none
             "
+            @click="btnInvite"
             >Invite</span
           >
           Invited:0
+        </div>
+        <div v-show="info.copied" class="text-yellow-500">
+          Your invite URL is copied to your clip board.
         </div>
       </div>
     </div>
 
     <div>
-      You can mint Octopus Game Token by 0.01 BNB. Each mint will last for 1
+      You can mint Octopus Game Token by 0.001 BNB. Each mint will last for 1
       day. The token amount will equal to your power value when you began mint.
     </div>
     <div>
@@ -72,3 +80,130 @@
     <div>Airdrop will be available for the community in the future.</div>
   </div>
 </template>
+<script setup lang="ts">
+import {
+  ref,
+  Ref,
+  reactive,
+  computed,
+  nextTick,
+  onMounted,
+  getCurrentInstance,
+} from 'vue';
+import { useStore } from 'vuex';
+// import { useRoute } from "vue-router";
+// const route = useRoute();
+
+import { copy } from '../js/utils/copyText';
+const store = useStore();
+
+// import { requestLoginMetaMask } from "../js/web3/getWeb3";
+
+// import { mintCoin } from "../js/web3/gameMethods";
+const app = getCurrentInstance();
+
+const info = reactive({
+  myInviter: '',
+  myAddress: '0x0', //updata when connect to wallet
+  myPower: 500,
+  canMintnow: false,
+  canClaim: false,
+
+  currentMintingTime: 0,
+  currentMintingCountDown: '',
+
+  copied: false,
+});
+
+onMounted(async () => {
+  // info.myInviter = (route.query.i as string) || "0x0";
+  info.canMintnow = (await checkCanMintNow()) as boolean;
+  mintStarted();
+});
+
+function btnInvite() {
+  // needConnected
+  copy(`${location.host}/mint?i=${store.state.address}`);
+  info.copied = true;
+  setTimeout(() => {
+    info.copied = false;
+  }, 2000);
+}
+
+function walletLogined() {
+  return false;
+}
+
+async function btnMintCoin() {
+  if (!walletLogined()) {
+    // await requestLoginMetaMask(() => {});
+  }
+
+  const power = upgradePower();
+  if (await checkCanMintNow()) {
+    // mintCoin({ power, whoInviteMe: info.myInviter }).then((res) => {
+    //   console.log(res);
+    //   mintStarted();
+    // });
+  } else {
+    console.log('can not mint now');
+  }
+}
+
+async function mintStarted() {
+  function getMintingTime() {
+    return new Promise((resolve, reject) => {
+      resolve(1636999732);
+    });
+  }
+
+  const mintingTime = await getMintingTime();
+  info.currentMintingTime = (mintingTime as number) * 1000;
+  setCountDownTime(info.currentMintingTime);
+}
+
+function checkCanMintNow() {
+  return new Promise((resolve, reject) => {
+    resolve(true);
+  });
+}
+
+function upgradePower(): number {
+  return info.myPower;
+}
+
+let countdownInterval: any;
+function setCountDownTime(endDateMilliSeconds: number) {
+  clearInterval(countdownInterval);
+  if (endDateMilliSeconds > Date.now()) {
+    countdownInterval = setInterval(() => {
+      Countdown(endDateMilliSeconds);
+    }, 1000);
+  } else {
+    info.currentMintingCountDown = '';
+  }
+}
+
+function Countdown(endDateMilliSeconds: number) {
+  const now = Date.now();
+  const diffSec = Math.floor((endDateMilliSeconds - now) / 1000);
+  info.currentMintingCountDown = formatTimegap(diffSec);
+}
+
+function formatTimegap(times: number) {
+  if (times < 0) {
+    return '';
+  }
+
+  const days = Math.floor(times / 3600 / 24);
+  const hours = Math.floor(times / 3600) - days * 24;
+  const mins = Math.floor(times / 60) - days * 24 * 60 - hours * 60;
+  const secs = times - days * 24 * 3600 - hours * 3600 - mins * 60;
+  // let string = days ? days + " " : "";
+  // string += (hours ? hours : "00") + ":";
+  // string += (mins ? (mins > 9 ? mins : "0" + mins) : "00") + ":";
+  // string += (secs > 9 ? "" : "0") + secs;
+  const string = `${days}D ${hours}H ${mins}M ${secs}S`;
+  return string;
+}
+</script>

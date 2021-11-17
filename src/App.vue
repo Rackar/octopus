@@ -35,12 +35,22 @@
           to="/about"
           >About</router-link
         >
+        <ConnectWallet />
       </div>
+      <router-view />
     </div>
   </div>
-  <router-view />
 </template>
+<script>
+import { defineComponent } from 'vue';
 
+import ConnectWallet from './components/ConnectWallet.vue';
+export default defineComponent({
+  components: {
+    ConnectWallet,
+  },
+});
+</script>
 <style>
 .container {
   padding-inline: 2em;
