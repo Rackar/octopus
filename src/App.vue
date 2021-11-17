@@ -1,30 +1,61 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div>
+    <div class="container gird text-green-500 text-lg">
+      <h1 class="font-bold text-5xl py-4 text-green-400 select-none">
+        Octopus Game #1
+      </h1>
+      <div class="py-8 text-3xl font-bold flex flex-wrap">
+        <router-link
+          class="mr-12 nav-btn"
+          :class="$route.fullPath === '/' ? 'under-line' : ''"
+          to="/"
+          >New Game</router-link
+        >
+        <router-link
+          class="mr-12 nav-btn"
+          :class="$route.fullPath === '/logs' ? 'under-line' : ''"
+          to="/logs"
+          >Logs</router-link
+        >
+        <router-link
+          class="mr-12 nav-btn"
+          :class="$route.fullPath === '/market' ? 'under-line' : ''"
+          to="/market"
+          >Market</router-link
+        >
+        <router-link
+          class="mr-12 nav-btn"
+          :class="$route.fullPath === '/mint' ? 'under-line' : ''"
+          to="/mint"
+          >Mint</router-link
+        >
+        <router-link
+          class="mr-12 nav-btn"
+          :class="$route.fullPath === '/about' ? 'under-line' : ''"
+          to="/about"
+          >About</router-link
+        >
+      </div>
+    </div>
   </div>
   <router-view />
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+.container {
+  padding-inline: 2em;
+  margin-inline: auto;
+  min-height: 100vh;
+  font-family: monospace;
 }
-
-#nav {
-  padding: 30px;
+ul li {
+  display: inline-block;
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.nav-btn {
+  user-select: none;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.under-line {
+  padding-bottom: 6px;
+  border-bottom: 2px #589f85b3 solid;
 }
 </style>
