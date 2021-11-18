@@ -41,7 +41,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 
 import ConnectWallet from './components/ConnectWallet.vue';

@@ -81,26 +81,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  ref,
-  Ref,
-  reactive,
-  computed,
-  nextTick,
-  onMounted,
-  getCurrentInstance,
-} from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useStore } from 'vuex';
-// import { useRoute } from "vue-router";
-// const route = useRoute();
+import { useRoute } from 'vue-router';
+const route = useRoute();
 
 import { copy } from '../js/utils/copyText';
 const store = useStore();
+import { requestLoginMetamask } from '../js/web3/index';
 
 // import { requestLoginMetaMask } from "../js/web3/getWeb3";
 
-// import { mintCoin } from "../js/web3/gameMethods";
-const app = getCurrentInstance();
+import { mintCoin } from '../js/web3/gameMethods';
 
 const info = reactive({
   myInviter: '',
@@ -116,7 +108,8 @@ const info = reactive({
 });
 
 onMounted(async () => {
-  // info.myInviter = (route.query.i as string) || "0x0";
+  const myInviter = route.query.i as string;
+  store.commit('setMyInviter', myInviter);
   info.canMintnow = (await checkCanMintNow()) as boolean;
   mintStarted();
 });
@@ -136,15 +129,15 @@ function walletLogined() {
 
 async function btnMintCoin() {
   if (!walletLogined()) {
-    // await requestLoginMetaMask(() => {});
+    await requestLoginMetamask();
   }
 
   const power = upgradePower();
   if (await checkCanMintNow()) {
-    // mintCoin({ power, whoInviteMe: info.myInviter }).then((res) => {
-    //   console.log(res);
-    //   mintStarted();
-    // });
+    mintCoin({ power, whoInviteMe: info.myInviter }).then(res => {
+      console.log(res);
+      mintStarted();
+    });
   } else {
     console.log('can not mint now');
   }
@@ -153,7 +146,7 @@ async function btnMintCoin() {
 async function mintStarted() {
   function getMintingTime() {
     return new Promise((resolve, reject) => {
-      resolve(1636999732);
+      resolve(1637599732);
     });
   }
 
