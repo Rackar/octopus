@@ -102,8 +102,8 @@ const requestLoginMetaMask = async cb => {
       .catch(err => {
         console.error(err);
       });
-    provider.removeListener('accountsChanged', () => {});
-    provider.removeListener('chainChanged', () => {});
+    provider.removeListener('accountsChanged', () => { });
+    provider.removeListener('chainChanged', () => { });
     provider.on('accountsChanged', handleAccountsChanged);
 
     provider.on('chainChanged', handleChainChanged);

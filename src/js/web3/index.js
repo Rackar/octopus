@@ -11,7 +11,8 @@ import {
 } from '../contract';
 // For now, 'eth_accounts' will continue to always return an array
 
-let currentAccount = '';
+// import { useStore } from 'vuex';
+import store from '../../store';
 
 async function manuallyChangeChainId(chainId = 0x2a, provider) {
   try {
@@ -46,6 +47,7 @@ const initWeb3 = async () => {
     gameContract: null,
   };
 
+  debugger;
   // this returns the provider, or null if it wasn't detected
   let provider = await detectEthereumProvider();
   if (provider) {
@@ -63,16 +65,18 @@ const initWeb3 = async () => {
     );
   }
 
+  let currentAccount = '';
+
   function handleAccountsChanged(accounts) {
     if (accounts.length === 0) {
       // MetaMask is locked or the user has not connected any accounts
       console.log('Please connect to MetaMask.');
+      store.commit('setUser', '0x0');
     } else if (accounts[0] !== currentAccount) {
       currentAccount = accounts[0];
       // Do any other work!
       console.log('Account changed:', currentAccount);
-      result.login = true;
-      result.account = currentAccount;
+      store.commit('setUser', currentAccount);
     }
   }
 
@@ -83,7 +87,7 @@ const initWeb3 = async () => {
       console.log('chain wrong');
     }
 
-    result.chainId = _chainId;
+    store.commit('setChain', _chainId);
     // We recommend reloading the page, unless you must do otherwise
     // window.location.reload();
   }
