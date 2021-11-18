@@ -1,4 +1,4 @@
-function copy(text) {
+function copy(text: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const promise = navigator.clipboard.writeText(text);
     promise.then(
