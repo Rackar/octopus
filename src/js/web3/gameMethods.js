@@ -8,13 +8,12 @@ const config = {
   defaultUnitPrice: Web3.utils.toWei((0.001).toString()),
 };
 
-function mintCoin({ power, whoInviteMe }) {
+function mintCoin({ power, whoInviteMe, myAccount }) {
   return new Promise((resolve, reject) => {
-    initWeb3().then(({ gameContract, account }) => {
-      debugger;
+    initWeb3().then(({ gameContract }) => {
       gameContract.methods
         .mintCoin(power, whoInviteMe)
-        .send({ from: account })
+        .send({ from: myAccount, value: countToWei(0.001) })
         .then(result => {
           console.log(JSON.stringify(result));
           resolve(result);

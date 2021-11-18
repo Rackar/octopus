@@ -96,7 +96,7 @@ import { mintCoin } from '../js/web3/gameMethods';
 
 const info = reactive({
   myInviter: '',
-  myAddress: '0x0', //updata when connect to wallet
+  myAddress: '0x0000000000000000000000000000000000000000', //updata when connect to wallet
   myPower: 500,
   canMintnow: false,
   canClaim: false,
@@ -111,7 +111,7 @@ onMounted(async () => {
   const myInviter = route.query.i as string;
   store.commit('setMyInviter', myInviter);
   info.canMintnow = (await checkCanMintNow()) as boolean;
-  mintStarted();
+  mintStarted('');
 });
 
 function btnInvite() {
@@ -134,23 +134,28 @@ async function btnMintCoin() {
 
   const power = upgradePower();
   if (await checkCanMintNow()) {
-    mintCoin({ power, whoInviteMe: info.myInviter }).then(res => {
+    mintCoin({
+      power,
+      whoInviteMe: store.state.myInviter,
+      myAccount: store.state.address,
+    }).then(res => {
       console.log(res);
-      mintStarted();
+      const { startTime } = res.events.MintCoin.returnValues;
+      mintStarted(startTime);
     });
   } else {
     console.log('can not mint now');
   }
 }
 
-async function mintStarted() {
+async function mintStarted(startTime: string) {
   function getMintingTime() {
     return new Promise((resolve, reject) => {
       resolve(1637599732);
     });
   }
 
-  const mintingTime = await getMintingTime();
+  const mintingTime = startTime || (await getMintingTime());
   info.currentMintingTime = (mintingTime as number) * 1000;
   setCountDownTime(info.currentMintingTime);
 }

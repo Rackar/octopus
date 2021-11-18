@@ -1,4 +1,4 @@
-const address_GAME = '0x75d212ebbC089C06Bb32021A013c34c41655179b';
+const address_GAME = '0xF5024f332DA848F1D49407c6552ad68E47B8a906';
 const ABI_GAME = [
   {
     anonymous: false,

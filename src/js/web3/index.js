@@ -65,18 +65,18 @@ const initWeb3 = async () => {
     );
   }
 
-  let currentAccount = '';
+  const currentAccount = '';
 
   function handleAccountsChanged(accounts) {
     if (accounts.length === 0) {
       // MetaMask is locked or the user has not connected any accounts
       console.log('Please connect to MetaMask.');
-      store.commit('setUser', '0x0');
+      result.account = '0x0000000000000000000000000000000000000000';
+      store.commit('setUser', result.account);
     } else if (accounts[0] !== currentAccount) {
-      currentAccount = accounts[0];
-      // Do any other work!
-      console.log('Account changed:', currentAccount);
-      store.commit('setUser', currentAccount);
+      result.account = accounts[0];
+      store.commit('setUser', result.account);
+      console.log('Account changed:', result.account);
     }
   }
 
@@ -86,6 +86,8 @@ const initWeb3 = async () => {
     if (!ALLOWED_CHAIN_IDS.includes(_chainId)) {
       console.log('chain wrong');
     }
+
+    result.chainId = _chainId;
 
     store.commit('setChain', _chainId);
     // We recommend reloading the page, unless you must do otherwise
@@ -139,8 +141,32 @@ const initWeb3 = async () => {
 
   result.provider = provider;
 
+  listenEvents(result);
+
   return result;
 };
+
+function listenEvents({ coinContract, nftContract, gameContract }) {
+  const myEvent = gameContract.events
+    .MintCoin(
+      {
+        filter: {},
+
+        fromBlock: 0,
+      },
+      (error, event) => { }
+    )
+
+    .on('data', event => {
+      console.log(event); // same results as the optional callback above
+    })
+
+    .on('changed', event => {
+      // remove event from local database
+    })
+
+    .on('error', console.error);
+}
 
 const requestLoginMetamask = async () => {
   const { provider } = await initWeb3();
