@@ -11,9 +11,11 @@ const config = {
 function mintCoin({ power, whoInviteMe, myAccount }) {
   return new Promise((resolve, reject) => {
     initWeb3().then(({ gameContract }) => {
+      whoInviteMe = whoInviteMe || '0x0000000000000000000000000000000000000000';
+      debugger;
       gameContract.methods
         .mintCoin(power, whoInviteMe)
-        .send({ from: myAccount, value: countToWei(0.001) })
+        .send({ from: myAccount, value: countToWei(1) })
         .then(result => {
           console.log(JSON.stringify(result));
           resolve(result);

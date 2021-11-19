@@ -1,16 +1,21 @@
-const address_GAME = '0xF5024f332DA848F1D49407c6552ad68E47B8a906';
+const address_GAME = '0x598A5D6D9ebe579BE51d1Edc7f9E2bf369f577d9';
 const ABI_GAME = [
+  {
+    inputs: [],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
   {
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'address',
         name: 'invitingAddress',
         type: 'address',
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: 'address',
         name: 'invitedAddress',
         type: 'address',
@@ -147,21 +152,21 @@ const ABI_GAME = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'address',
-        name: '_user',
+        name: 'user',
         type: 'address',
       },
       {
         indexed: false,
         internalType: 'uint256',
-        name: '_startTime',
+        name: 'startTime',
         type: 'uint256',
       },
       {
         indexed: false,
         internalType: 'uint256',
-        name: '_power',
+        name: 'power',
         type: 'uint256',
       },
     ],
@@ -191,6 +196,25 @@ const ABI_GAME = [
     inputs: [
       {
         internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'allPlayers',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
         name: '_user',
         type: 'address',
       },
@@ -203,6 +227,19 @@ const ABI_GAME = [
     name: 'approveAirdropToAddress',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'balance',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -229,6 +266,19 @@ const ABI_GAME = [
     name: 'claimMintCoin',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'coinCanClaim',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -264,171 +314,6 @@ const ABI_GAME = [
     name: 'deposit',
     outputs: [],
     stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_matchId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: '_color',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_lucky',
-        type: 'string',
-      },
-    ],
-    name: 'joinMatch',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_power',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: '_whoInviteMe',
-        type: 'address',
-      },
-    ],
-    name: 'mintCoin',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_matchId',
-        type: 'uint256',
-      },
-    ],
-    name: 'startBattle',
-    outputs: [
-      {
-        components: [
-          {
-            internalType: 'address',
-            name: 'userAddress',
-            type: 'address',
-          },
-          {
-            internalType: 'uint256',
-            name: 'matchId',
-            type: 'uint256',
-          },
-          {
-            internalType: 'string',
-            name: 'color',
-            type: 'string',
-          },
-          {
-            internalType: 'string',
-            name: 'lucky',
-            type: 'string',
-          },
-        ],
-        internalType: 'struct OCGTgame.Player',
-        name: '',
-        type: 'tuple',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bool',
-        name: '_canMint',
-        type: 'bool',
-      },
-    ],
-    name: 'switchMint',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'newOwner',
-        type: 'address',
-      },
-    ],
-    name: 'transferOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-  },
-  {
-    inputs: [],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'allPlayers',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'balance',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'coinCanClaim',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -561,6 +446,29 @@ const ABI_GAME = [
     inputs: [
       {
         internalType: 'uint256',
+        name: '_matchId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string',
+        name: '_color',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: '_lucky',
+        type: 'string',
+      },
+    ],
+    name: 'joinMatch',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
         name: '',
         type: 'uint256',
       },
@@ -597,6 +505,24 @@ const ABI_GAME = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_power',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: '_whoInviteMe',
+        type: 'address',
+      },
+    ],
+    name: 'mintCoin',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'owner',
     outputs: [
@@ -610,6 +536,60 @@ const ABI_GAME = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_matchId',
+        type: 'uint256',
+      },
+    ],
+    name: 'startBattle',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'userAddress',
+            type: 'address',
+          },
+          {
+            internalType: 'uint256',
+            name: 'matchId',
+            type: 'uint256',
+          },
+          {
+            internalType: 'string',
+            name: 'color',
+            type: 'string',
+          },
+          {
+            internalType: 'string',
+            name: 'lucky',
+            type: 'string',
+          },
+        ],
+        internalType: 'struct OCGTgame.Player',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bool',
+        name: '_canMint',
+        type: 'bool',
+      },
+    ],
+    name: 'switchMint',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'token',
     outputs: [
@@ -620,6 +600,26 @@ const ABI_GAME = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
 ];

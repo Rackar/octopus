@@ -146,34 +146,66 @@ const initWeb3 = async () => {
   return result;
 };
 
-function listenEvents({ coinContract, nftContract, gameContract }) {
-  const myEvent = gameContract.events
+function listenEvents({ coinContract, nftContract, gameContract, account }) {
+  const mintEvent = gameContract.events
     .MintCoin(
       {
         filter: {},
 
         fromBlock: 0,
       },
-      (error, event) => { }
+      (error, event) => {
+        console.log(error, event);
+      }
     )
-
     .on('data', event => {
       console.log(event); // same results as the optional callback above
     })
-
     .on('changed', event => {
       // remove event from local database
     })
+    .on('error', console.error);
 
+  const inviteEvent = gameContract.events
+    .InviteSuccess(
+      {
+        filter: { invitingAddress: account },
+
+        fromBlock: 0,
+      },
+      (error, event) => {
+        console.log(error, event);
+      }
+    )
+    .on('data', event => {
+      console.log(event); // same results as the optional callback above
+    })
+    .on('changed', event => {
+      // remove event from local database
+    })
     .on('error', console.error);
 }
 
+const getMyPastInvites = async ({ gameContract, account }) => {
+  gameContract.getPastEvents(
+    'InviteSuccess',
+    {
+      filter: {},
+    },
+    (error, events) => {
+      debugger;
+      console.log('past invite:', events);
+    }
+  );
+};
+
 const requestLoginMetamask = async () => {
-  const { provider } = await initWeb3();
+  const { provider, gameContract, account } = await initWeb3();
   await provider
     .request({ method: 'eth_requestAccounts' })
     .then(data => {
       console.log(data);
+      getMyPastInvites({ gameContract, account });
     })
     .catch(err => {
       if (err.code === 4001) {
