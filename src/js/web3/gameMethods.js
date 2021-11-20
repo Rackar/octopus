@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 // import { web3instance } from './getWeb3';
-import { initWeb3 } from './index';
+import { getInstaceResult } from './index';
 import { weiToCount, countToWei } from './Utils';
 import { address_GAME } from '../contract';
 const config = {
@@ -10,7 +10,7 @@ const config = {
 
 function mintCoin({ power, whoInviteMe, myAccount }) {
   return new Promise((resolve, reject) => {
-    initWeb3().then(({ gameContract }) => {
+    getInstaceResult().then(({ gameContract }) => {
       whoInviteMe = whoInviteMe || '0x0000000000000000000000000000000000000000';
       debugger;
       gameContract.methods

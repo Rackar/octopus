@@ -13,6 +13,16 @@ import {
 
 // import { useStore } from 'vuex';
 import store from '../../store';
+const instanceResult = {
+  init: false,
+  login: false,
+  account: null,
+  chainId: null,
+  provider: null,
+  coinContract: null,
+  nftContract: null,
+  gameContract: null,
+};
 
 async function manuallyChangeChainId(chainId = 0x2a, provider) {
   try {
@@ -36,17 +46,16 @@ async function manuallyChangeChainId(chainId = 0x2a, provider) {
   }
 }
 
-const initWeb3 = async () => {
-  const result = {
-    login: false,
-    account: null,
-    chainId: null,
-    provider: null,
-    coinContract: null,
-    nftContract: null,
-    gameContract: null,
-  };
+async function getInstaceResult() {
+  debugger;
+  if (instanceResult.init) {
+    return instanceResult;
+  } else {
+    return await initWeb3();
+  }
+}
 
+const initWeb3 = async () => {
   debugger;
   // this returns the provider, or null if it wasn't detected
   let provider = await detectEthereumProvider();
@@ -71,12 +80,12 @@ const initWeb3 = async () => {
     if (accounts.length === 0) {
       // MetaMask is locked or the user has not connected any accounts
       console.log('Please connect to MetaMask.');
-      result.account = '0x0000000000000000000000000000000000000000';
-      store.commit('setUser', result.account);
+      instanceResult.account = '0x0000000000000000000000000000000000000000';
+      store.commit('setUser', instanceResult.account);
     } else if (accounts[0] !== currentAccount) {
-      result.account = accounts[0];
-      store.commit('setUser', result.account);
-      console.log('Account changed:', result.account);
+      instanceResult.account = accounts[0];
+      store.commit('setUser', instanceResult.account);
+      console.log('Account changed:', instanceResult.account);
     }
   }
 
@@ -87,7 +96,7 @@ const initWeb3 = async () => {
       console.log('chain wrong');
     }
 
-    result.chainId = _chainId;
+    instanceResult.chainId = _chainId;
 
     store.commit('setChain', _chainId);
     // We recommend reloading the page, unless you must do otherwise
@@ -135,29 +144,25 @@ const initWeb3 = async () => {
   web3.eth.defaultAccount = provider.selectedAddress;
   console.log(`new user address ${provider.selectedAddress}`);
 
-  result.coinContract = new web3.eth.Contract(ABI_COIN, address_COIN); //dnft
-  result.nftContract = new web3.eth.Contract(ABI_NFT, address_NFT); //dnft
-  result.gameContract = new web3.eth.Contract(ABI_GAME, address_GAME); //dnft
+  instanceResult.coinContract = new web3.eth.Contract(ABI_COIN, address_COIN); //dnft
+  instanceResult.nftContract = new web3.eth.Contract(ABI_NFT, address_NFT); //dnft
+  instanceResult.gameContract = new web3.eth.Contract(ABI_GAME, address_GAME); //dnft
 
-  result.provider = provider;
+  instanceResult.provider = provider;
+  instanceResult.init = true;
 
-  listenEvents(result);
+  listenEvents(instanceResult);
 
-  return result;
+  return instanceResult;
 };
 
 function listenEvents({ coinContract, nftContract, gameContract, account }) {
   const mintEvent = gameContract.events
-    .MintCoin(
-      {
-        filter: {},
+    .MintCoin({
+      filter: {},
 
-        fromBlock: 0,
-      },
-      (error, event) => {
-        console.log(error, event);
-      }
-    )
+      fromBlock: 0,
+    })
     .on('data', event => {
       console.log(event); // same results as the optional callback above
     })
@@ -167,16 +172,11 @@ function listenEvents({ coinContract, nftContract, gameContract, account }) {
     .on('error', console.error);
 
   const inviteEvent = gameContract.events
-    .InviteSuccess(
-      {
-        filter: { invitingAddress: account },
+    .InviteSuccess({
+      filter: { invitingAddress: account },
 
-        fromBlock: 0,
-      },
-      (error, event) => {
-        console.log(error, event);
-      }
-    )
+      fromBlock: 0,
+    })
     .on('data', event => {
       console.log(event); // same results as the optional callback above
     })
@@ -190,7 +190,11 @@ const getMyPastInvites = async ({ gameContract, account }) => {
   gameContract.getPastEvents(
     'InviteSuccess',
     {
-      filter: {},
+      filter: {
+        // invitingAddress: account,
+      },
+      fromBlock: 0,
+      toBlock: 'latest', //必须要有from 和 to， 否则报错
     },
     (error, events) => {
       debugger;
@@ -200,7 +204,7 @@ const getMyPastInvites = async ({ gameContract, account }) => {
 };
 
 const requestLoginMetamask = async () => {
-  const { provider, gameContract, account } = await initWeb3();
+  const { provider, gameContract, account } = await getInstaceResult();
   await provider
     .request({ method: 'eth_requestAccounts' })
     .then(data => {
@@ -218,4 +222,9 @@ const requestLoginMetamask = async () => {
     });
 };
 
-export { initWeb3, manuallyChangeChainId, requestLoginMetamask };
+export {
+  initWeb3,
+  getInstaceResult,
+  manuallyChangeChainId,
+  requestLoginMetamask,
+};

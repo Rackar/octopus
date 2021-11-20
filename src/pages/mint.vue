@@ -124,7 +124,7 @@ function btnInvite() {
 }
 
 function walletLogined() {
-  return false;
+  return store.state.login;
 }
 
 async function btnMintCoin() {
