@@ -17,6 +17,7 @@ function mintCoin({ power, whoInviteMe, myAccount }) {
         .mintCoin(power, whoInviteMe)
         .send({ from: myAccount, value: countToWei(1) })
         .then(result => {
+          debugger;
           console.log(JSON.stringify(result));
           resolve(result);
         })

@@ -6,6 +6,7 @@ export default createStore({
     chainId: 0,
     balance: 0,
     myInviter: '0x0000000000000000000000000000000000000000',
+    inviteCount: 0,
   },
   mutations: {
     setUser(state, address: string) {
@@ -21,6 +22,9 @@ export default createStore({
       } else {
         state.myInviter = myInviter;
       }
+    },
+    setInvite(state, inviteCount: number) {
+      state.inviteCount = inviteCount;
     },
   },
   actions: {},

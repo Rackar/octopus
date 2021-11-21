@@ -47,7 +47,6 @@ async function manuallyChangeChainId(chainId = 0x2a, provider) {
 }
 
 async function getInstaceResult() {
-  debugger;
   if (instanceResult.init) {
     return instanceResult;
   } else {
@@ -56,7 +55,6 @@ async function getInstaceResult() {
 }
 
 const initWeb3 = async () => {
-  debugger;
   // this returns the provider, or null if it wasn't detected
   let provider = await detectEthereumProvider();
   if (provider) {
@@ -157,33 +155,42 @@ const initWeb3 = async () => {
 };
 
 function listenEvents({ coinContract, nftContract, gameContract, account }) {
-  const mintEvent = gameContract.events
-    .MintCoin({
-      filter: {},
+  // const mintEvent = gameContract.events
+  //   .MintCoin({
+  //     filter: {},
 
-      fromBlock: 0,
-    })
-    .on('data', event => {
-      console.log(event); // same results as the optional callback above
-    })
-    .on('changed', event => {
-      // remove event from local database
-    })
-    .on('error', console.error);
+  //     fromBlock: 0,
+  //   })
+  //   .on('data', event => {
+  //     console.log(event); // same results as the optional callback above
+  //   })
+  //   .on('changed', event => {
+  //     // remove event from local database
+  //   })
+  //   .on('error', console.error);
 
-  const inviteEvent = gameContract.events
-    .InviteSuccess({
+  const inviteEvent = gameContract.events.InviteSuccess(
+    {
       filter: { invitingAddress: account },
 
       fromBlock: 0,
-    })
-    .on('data', event => {
-      console.log(event); // same results as the optional callback above
-    })
-    .on('changed', event => {
-      // remove event from local database
-    })
-    .on('error', console.error);
+    },
+    (error, event) => {
+      console.log(account);
+      if (error) {
+        console.log(error);
+      }
+
+      console.log(event);
+    }
+  );
+  // .on('data', event => {
+  //   console.log(event); // same results as the optional callback above
+  // })
+  // .on('changed', event => {
+  //   // remove event from local database
+  // })
+  // .on('error', console.error);
 }
 
 const getMyPastInvites = async ({ gameContract, account }) => {
@@ -191,25 +198,30 @@ const getMyPastInvites = async ({ gameContract, account }) => {
     'InviteSuccess',
     {
       filter: {
-        // invitingAddress: account,
+        invitingAddress: account,
       },
       fromBlock: 0,
       toBlock: 'latest', //必须要有from 和 to， 否则报错
     },
     (error, events) => {
-      debugger;
-      console.log('past invite:', events);
+      console.log('past invite:', events.length);
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(events);
+        store.commit('setInvite', events.length);
+      }
     }
   );
 };
 
 const requestLoginMetamask = async () => {
-  const { provider, gameContract, account } = await getInstaceResult();
-  await provider
+  const instance = await getInstaceResult();
+  await instance.provider
     .request({ method: 'eth_requestAccounts' })
     .then(data => {
       console.log(data);
-      getMyPastInvites({ gameContract, account });
+      getMyPastInvites(instance);
     })
     .catch(err => {
       if (err.code === 4001) {

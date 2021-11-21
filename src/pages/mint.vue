@@ -23,8 +23,10 @@
             @click="btnMintCoin"
             >Mint</span
           >
-          Power:500 (Mint ends in:
-          {{ info.currentMintingCountDown }})
+          Power: {{ info.myPower }}
+          <span v-if="store.state.login && info.myMintStarted"
+            >(Mint ends in: {{ info.currentMintingCountDown }})</span
+          >
         </div>
         <div class="my-4">
           <span
@@ -42,7 +44,7 @@
             "
             >Claim</span
           >
-          OCGT:0
+          OCGT:{{ info.myOCGT }}
         </div>
         <div class="my-4">
           <span
@@ -61,10 +63,10 @@
             @click="btnInvite"
             >Invite</span
           >
-          Invited:0
-        </div>
-        <div v-show="info.copied" class="text-yellow-500">
-          Your invite URL is copied to your clip board.
+          Invited:{{ store.state.inviteCount }}
+          <span v-show="info.copied" class="text-yellow-500">
+            Your invite URL is copied to your clip board.
+          </span>
         </div>
       </div>
     </div>
@@ -98,6 +100,10 @@ const info = reactive({
   myInviter: '',
   myAddress: '0x0000000000000000000000000000000000000000', //updata when connect to wallet
   myPower: 500,
+  myOCGT: 0,
+  myInviteCount: 0,
+  myMintStarted: false,
+
   canMintnow: false,
   canClaim: false,
 
