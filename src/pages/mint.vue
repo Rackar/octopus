@@ -77,13 +77,13 @@
     </div>
     <div>
       You will get 500 power when your first connect. After invite a friend
-      minting, you will get other 100 power. Power limits up to 2500.
+      minting, you will get other 100 power. Power limits up to 1500.
     </div>
     <div>Airdrop will be available for the community in the future.</div>
   </div>
 </template>
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 const route = useRoute();
@@ -96,10 +96,17 @@ import { requestLoginMetamask } from '../js/web3/index';
 
 import { mintCoin } from '../js/web3/gameMethods';
 
+const POWER_INIT = 500;
+const POWER_INVITE = 100;
+const POWER_LIMIT = 1500;
+
 const info = reactive({
   myInviter: '',
   myAddress: '0x0000000000000000000000000000000000000000', //updata when connect to wallet
-  myPower: 500,
+  myPower: computed(() => {
+    const power = POWER_INIT + POWER_INVITE * store.state.inviteCount;
+    return power > POWER_LIMIT ? POWER_LIMIT : power;
+  }),
   myOCGT: 0,
   myInviteCount: 0,
   myMintStarted: false,
@@ -138,7 +145,7 @@ async function btnMintCoin() {
     await requestLoginMetamask();
   }
 
-  const power = upgradePower();
+  const power = info.myPower;
   if (await checkCanMintNow()) {
     mintCoin({
       power,
@@ -170,10 +177,6 @@ function checkCanMintNow() {
   return new Promise((resolve, reject) => {
     resolve(true);
   });
-}
-
-function upgradePower(): number {
-  return info.myPower;
 }
 
 let countdownInterval: any;

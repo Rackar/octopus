@@ -182,6 +182,11 @@ function listenEvents({ coinContract, nftContract, gameContract, account }) {
       }
 
       console.log(event);
+      const count =
+        (event?.returnValues?.invitedCount &&
+          parseInt(event.returnValues.invitedCount)) ||
+        0;
+      store.commit('setInvite', count);
     }
   );
   // .on('data', event => {
@@ -192,6 +197,38 @@ function listenEvents({ coinContract, nftContract, gameContract, account }) {
   // })
   // .on('error', console.error);
 }
+
+const getMyLastMint = async ({ gameContract, account }) => {
+  gameContract.getPastEvents(
+    'MintCoin',
+    {
+      filter: {
+        user: account,
+      },
+      fromBlock: 0,
+      toBlock: 'latest', //必须要有from 和 to， 否则报错
+    },
+    (error, events) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(events);
+        const last = events[events.length - 1];
+        let lastStartTime = last?.returnValues?.startTime;
+        if (lastStartTime) {
+          lastStartTime = parseInt(lastStartTime);
+        }
+
+        if (
+          lastStartTime * 1000 - Date.now() > 0 &&
+          lastStartTime * 1000 - Date.now() < 24 * 60 * 60 * 1000
+        ) {
+          store.commit('setMyLastMintTime', lastStartTime);
+        }
+      }
+    }
+  );
+};
 
 const getMyPastInvites = async ({ gameContract, account }) => {
   gameContract.getPastEvents(
@@ -222,6 +259,7 @@ const requestLoginMetamask = async () => {
     .then(data => {
       console.log(data);
       getMyPastInvites(instance);
+      getMyLastMint(instance);
     })
     .catch(err => {
       if (err.code === 4001) {

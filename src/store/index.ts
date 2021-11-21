@@ -7,6 +7,8 @@ export default createStore({
     balance: 0,
     myInviter: '0x0000000000000000000000000000000000000000',
     inviteCount: 0,
+
+    lastMintTime: 0,
   },
   mutations: {
     setUser(state, address: string) {
@@ -25,6 +27,9 @@ export default createStore({
     },
     setInvite(state, inviteCount: number) {
       state.inviteCount = inviteCount;
+    },
+    setMyLastMintTime(state, lastMintTime: number) {
+      state.lastMintTime = lastMintTime;
     },
   },
   actions: {},

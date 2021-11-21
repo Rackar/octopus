@@ -1,4 +1,4 @@
-const address_GAME = '0x19AE9F8deb0923890d4E112426746e4F74d058b4';
+const address_GAME = '0x71a67E3441B2C5bE5bAC2cdE647039dB910F5457';
 const ABI_GAME = [
   {
     inputs: [],
@@ -13,6 +13,12 @@ const ABI_GAME = [
         internalType: 'address',
         name: 'invitingAddress',
         type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'invitedCount',
+        type: 'uint256',
       },
       {
         indexed: true,
@@ -518,7 +524,13 @@ const ABI_GAME = [
       },
     ],
     name: 'mintCoin',
-    outputs: [],
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
     stateMutability: 'payable',
     type: 'function',
   },
