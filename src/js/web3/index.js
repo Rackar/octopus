@@ -13,6 +13,8 @@ import {
 
 // import { useStore } from 'vuex';
 import store from '../../store';
+
+import { getCoins } from './gameMethods';
 const instanceResult = {
   init: false,
   login: false,
@@ -212,6 +214,7 @@ const getMyLastMint = async ({ gameContract, account }) => {
       if (error) {
         console.log(error);
       } else {
+        debugger;
         console.log(events);
         const last = events[events.length - 1];
         let lastStartTime = last?.returnValues?.startTime;
@@ -219,11 +222,12 @@ const getMyLastMint = async ({ gameContract, account }) => {
           lastStartTime = parseInt(lastStartTime);
         }
 
-        if (
-          lastStartTime * 1000 - Date.now() > 0 &&
-          lastStartTime * 1000 - Date.now() < 24 * 60 * 60 * 1000
-        ) {
-          store.commit('setMyLastMintTime', lastStartTime);
+        const toNow = Date.now() - lastStartTime * 1000;
+        if (toNow > 0 && toNow < 24 * 60 * 60 * 1000) {
+          store.commit('setMyLastMint', {
+            lastStartTime,
+            power: last.returnValues.power,
+          });
         }
       }
     }
@@ -252,6 +256,12 @@ const getMyPastInvites = async ({ gameContract, account }) => {
   );
 };
 
+function getMyUnclaimCoins(instance) {
+  let coins = getCoins(instance);
+  coins = coins && parseInt(coins);
+  store.commit('setMyUnclaimCoins', coins);
+}
+
 const requestLoginMetamask = async () => {
   const instance = await getInstaceResult();
   await instance.provider
@@ -260,6 +270,7 @@ const requestLoginMetamask = async () => {
       console.log(data);
       getMyPastInvites(instance);
       getMyLastMint(instance);
+      getMyUnclaimCoins(instance);
     })
     .catch(err => {
       if (err.code === 4001) {

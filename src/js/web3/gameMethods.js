@@ -29,6 +29,25 @@ function mintCoin({ power, whoInviteMe, myAccount }) {
   });
 }
 
+function getCoins({ account }) {
+  return new Promise((resolve, reject) => {
+    getInstaceResult().then(({ gameContract }) => {
+      gameContract.methods
+        .coinCanClaim()
+        .call()
+        .then(result => {
+          debugger;
+          console.log(JSON.stringify(result));
+          resolve(result);
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
+    });
+  });
+}
+
 // function checkIsOwner() {
 //   return new Promise((resolve, reject) => {
 //     web3instance.dnftContract.methods
@@ -238,4 +257,4 @@ function mintCoin({ power, whoInviteMe, myAccount }) {
 //   });
 // }
 
-export { mintCoin };
+export { mintCoin, getCoins };

@@ -7,31 +7,31 @@
       <div class="py-8 text-3xl font-bold flex flex-wrap">
         <router-link
           class="mr-12 nav-btn"
-          :class="$route.fullPath === '/' ? 'under-line' : ''"
+          :class="$route.path === '/' ? 'under-line' : ''"
           to="/"
           >New Game</router-link
         >
         <router-link
           class="mr-12 nav-btn"
-          :class="$route.fullPath === '/logs' ? 'under-line' : ''"
+          :class="$route.path === '/logs' ? 'under-line' : ''"
           to="/logs"
           >Logs</router-link
         >
         <router-link
           class="mr-12 nav-btn"
-          :class="$route.fullPath === '/market' ? 'under-line' : ''"
+          :class="$route.path === '/market' ? 'under-line' : ''"
           to="/market"
           >Market</router-link
         >
         <router-link
           class="mr-12 nav-btn"
-          :class="$route.fullPath === '/mint' ? 'under-line' : ''"
+          :class="$route.path === '/mint' ? 'under-line' : ''"
           to="/mint"
           >Mint</router-link
         >
         <router-link
           class="mr-12 nav-btn"
-          :class="$route.fullPath === '/about' ? 'under-line' : ''"
+          :class="$route.path === '/about' ? 'under-line' : ''"
           to="/about"
           >About</router-link
         >

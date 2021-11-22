@@ -24,8 +24,13 @@
             >Mint</span
           >
           Power: {{ info.myPower }}
-          <span v-if="store.state.login && info.myMintStarted"
-            >(Mint ends in: {{ info.currentMintingCountDown }})</span
+          <span
+            v-if="
+              store.state.login &&
+              store.state.lastMintTime &&
+              store.state.currentMintingCountDown
+            "
+            >(Mint ends in: {{ store.state.currentMintingCountDown }})</span
           >
         </div>
         <div class="my-4">
@@ -127,7 +132,11 @@ onMounted(async () => {
   mintStarted('');
 });
 
-function btnInvite() {
+async function btnInvite() {
+  if (!walletLogined()) {
+    await requestLoginMetamask();
+  }
+
   // needConnected
   copy(`${location.host}/mint?i=${store.state.address}`);
   info.copied = true;
@@ -151,26 +160,41 @@ async function btnMintCoin() {
       power,
       whoInviteMe: store.state.myInviter,
       myAccount: store.state.address,
-    }).then(res => {
+    }).then((res: any) => {
       console.log(res);
-      const { startTime } = res.events.MintCoin.returnValues;
-      mintStarted(startTime);
+      const { startTime, power } = res.events.MintCoin.returnValues;
+      mintStarted({ startTime, power });
     });
   } else {
     console.log('can not mint now');
   }
 }
 
-async function mintStarted(startTime: string) {
-  function getMintingTime() {
-    return new Promise((resolve, reject) => {
-      resolve(1637599732);
+async function mintStarted({
+  startTime,
+  power,
+}: {
+  startTime: string;
+  power: number;
+}) {
+  // function getMintingTime() {
+  //   return new Promise((resolve, reject) => {
+  //     resolve(store.state.lastMintTime);
+  //   });
+  // }
+
+  if (startTime) {
+    store.commit('setMyLastMint', {
+      startTime: parseInt(startTime),
+      power,
     });
   }
 
-  const mintingTime = startTime || (await getMintingTime());
-  info.currentMintingTime = (mintingTime as number) * 1000;
-  setCountDownTime(info.currentMintingTime);
+  // debugger;
+
+  // const mintingTime = startTime || store.state.lastMintTime;
+  // info.currentMintingTime = (mintingTime as number) * 1000;
+  // setCountDownTime(info.currentMintingTime);
 }
 
 function checkCanMintNow() {
@@ -179,38 +203,38 @@ function checkCanMintNow() {
   });
 }
 
-let countdownInterval: any;
-function setCountDownTime(endDateMilliSeconds: number) {
-  clearInterval(countdownInterval);
-  if (endDateMilliSeconds > Date.now()) {
-    countdownInterval = setInterval(() => {
-      Countdown(endDateMilliSeconds);
-    }, 1000);
-  } else {
-    info.currentMintingCountDown = '';
-  }
-}
+// let countdownInterval: any;
+// function setCountDownTime(endDateMilliSeconds: number) {
+//   clearInterval(countdownInterval);
+//   if (endDateMilliSeconds > Date.now()) {
+//     countdownInterval = setInterval(() => {
+//       Countdown(endDateMilliSeconds);
+//     }, 1000);
+//   } else {
+//     info.currentMintingCountDown = '';
+//   }
+// }
 
-function Countdown(endDateMilliSeconds: number) {
-  const now = Date.now();
-  const diffSec = Math.floor((endDateMilliSeconds - now) / 1000);
-  info.currentMintingCountDown = formatTimegap(diffSec);
-}
+// function Countdown(endDateMilliSeconds: number) {
+//   const now = Date.now();
+//   const diffSec = Math.floor((endDateMilliSeconds - now) / 1000);
+//   info.currentMintingCountDown = formatTimegap(diffSec);
+// }
 
-function formatTimegap(times: number) {
-  if (times < 0) {
-    return '';
-  }
+// function formatTimegap(times: number) {
+//   if (times < 0) {
+//     return '';
+//   }
 
-  const days = Math.floor(times / 3600 / 24);
-  const hours = Math.floor(times / 3600) - days * 24;
-  const mins = Math.floor(times / 60) - days * 24 * 60 - hours * 60;
-  const secs = times - days * 24 * 3600 - hours * 3600 - mins * 60;
-  // let string = days ? days + " " : "";
-  // string += (hours ? hours : "00") + ":";
-  // string += (mins ? (mins > 9 ? mins : "0" + mins) : "00") + ":";
-  // string += (secs > 9 ? "" : "0") + secs;
-  const string = `${days}D ${hours}H ${mins}M ${secs}S`;
-  return string;
-}
+//   const days = Math.floor(times / 3600 / 24);
+//   const hours = Math.floor(times / 3600) - days * 24;
+//   const mins = Math.floor(times / 60) - days * 24 * 60 - hours * 60;
+//   const secs = times - days * 24 * 3600 - hours * 3600 - mins * 60;
+//   // let string = days ? days + " " : "";
+//   // string += (hours ? hours : "00") + ":";
+//   // string += (mins ? (mins > 9 ? mins : "0" + mins) : "00") + ":";
+//   // string += (secs > 9 ? "" : "0") + secs;
+//   const string = `${days}D ${hours}H ${mins}M ${secs}S`;
+//   return string;
+// }
 </script>
