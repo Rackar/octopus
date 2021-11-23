@@ -47,6 +47,7 @@
               cursor-pointer
               select-none
             "
+            @click="info.showPopup = !info.showPopup"
             >Claim</span
           >
           OCGT:{{ store.state.unClaimCoin - store.state.unFinishedPower }}
@@ -59,6 +60,9 @@
             >(Current Minting: {{ store.state.unClaimFakeRealtime }})</span
           >
         </div>
+        <Popup v-if="info.showPopup" :TogglePopup="() => TogglePopup()"
+          >this is popup content</Popup
+        >
         <div class="my-4">
           <span
             class="
@@ -109,6 +113,8 @@ import { requestLoginMetamask } from '../js/web3/index';
 
 import { mintCoin } from '../js/web3/gameMethods';
 
+import Popup from '../plugins/Popup.vue';
+
 const POWER_INIT = 500;
 const POWER_INVITE = 100;
 const POWER_LIMIT = 1500;
@@ -131,6 +137,9 @@ const info = reactive({
   currentMintingCountDown: '',
 
   copied: false,
+  activeComponent: false,
+
+  showPopup: false,
 });
 
 onMounted(async () => {
@@ -139,6 +148,10 @@ onMounted(async () => {
   info.canMintnow = (await checkCanMintNow()) as boolean;
   // mintStarted('');
 });
+
+function TogglePopup() {
+  info.showPopup = !info.showPopup;
+}
 
 async function btnInvite() {
   if (!walletLogined()) {
