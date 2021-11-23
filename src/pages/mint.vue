@@ -23,7 +23,7 @@
             @click="btnMintCoin"
             >Mint</span
           >
-          Power: {{ info.myPower }}
+          Power: {{ store.getters.power }}
           <span
             v-if="
               store.state.login &&
@@ -49,7 +49,15 @@
             "
             >Claim</span
           >
-          OCGT:{{ info.myOCGT }}
+          OCGT:{{ store.state.unClaimCoin - store.state.unFinishedPower }}
+          <span
+            v-if="
+              store.state.login &&
+              store.state.lastMintTime &&
+              store.state.currentMintingCountDown
+            "
+            >(Current Minting: {{ store.state.unClaimFakeRealtime }})</span
+          >
         </div>
         <div class="my-4">
           <span
@@ -129,7 +137,7 @@ onMounted(async () => {
   const myInviter = route.query.i as string;
   store.commit('setMyInviter', myInviter);
   info.canMintnow = (await checkCanMintNow()) as boolean;
-  mintStarted('');
+  // mintStarted('');
 });
 
 async function btnInvite() {
@@ -175,7 +183,7 @@ async function mintStarted({
   power,
 }: {
   startTime: string;
-  power: number;
+  power: string;
 }) {
   // function getMintingTime() {
   //   return new Promise((resolve, reject) => {
@@ -185,8 +193,8 @@ async function mintStarted({
 
   if (startTime) {
     store.commit('setMyLastMint', {
-      startTime: parseInt(startTime),
-      power,
+      lastMintTime: parseInt(startTime),
+      power: parseInt(power),
     });
   }
 

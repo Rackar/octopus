@@ -12,12 +12,12 @@ function mintCoin({ power, whoInviteMe, myAccount }) {
   return new Promise((resolve, reject) => {
     getInstaceResult().then(({ gameContract }) => {
       whoInviteMe = whoInviteMe || '0x0000000000000000000000000000000000000000';
-      debugger;
+      // debugger;
       gameContract.methods
         .mintCoin(power, whoInviteMe)
         .send({ from: myAccount, value: countToWei(1) })
         .then(result => {
-          debugger;
+          // debugger;
           console.log(JSON.stringify(result));
           resolve(result);
         })
@@ -29,14 +29,33 @@ function mintCoin({ power, whoInviteMe, myAccount }) {
   });
 }
 
-function getCoins({ account }) {
+function claimCoin({ amount, myAccount }) {
+  return new Promise((resolve, reject) => {
+    getInstaceResult().then(({ gameContract }) => {
+      gameContract.methods
+        .claimMintCoin(amount)
+        .send({ from: myAccount })
+        .then(result => {
+          // debugger;
+          console.log(JSON.stringify(result));
+          resolve(result);
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
+    });
+  });
+}
+
+function getCoins() {
   return new Promise((resolve, reject) => {
     getInstaceResult().then(({ gameContract }) => {
       gameContract.methods
         .coinCanClaim()
         .call()
         .then(result => {
-          debugger;
+          // debugger;
           console.log(JSON.stringify(result));
           resolve(result);
         })
@@ -257,4 +276,4 @@ function getCoins({ account }) {
 //   });
 // }
 
-export { mintCoin, getCoins };
+export { mintCoin, getCoins, claimCoin };

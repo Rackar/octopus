@@ -1,4 +1,4 @@
-const address_GAME = '0x440e6132E88Bd8D3281734FE048fB1A1D29FB225';
+const address_GAME = '0x35CD39efCF9C20eCe53e53f1b229aaF7e29B1F60';
 const ABI_GAME = [
   {
     inputs: [],

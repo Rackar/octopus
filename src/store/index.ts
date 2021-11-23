@@ -1,4 +1,7 @@
 import { createStore } from 'vuex';
+const POWER_INIT = 500;
+const POWER_INVITE = 100;
+const POWER_LIMIT = 1500;
 export default createStore({
   state: {
     address: '0x0000000000000000000000000000000000000000',
@@ -11,13 +14,22 @@ export default createStore({
     lastMintTime: 0,
     currentMintingCountDown: '',
 
+    unClaimCoin: 0,
     unFinishedPower: 0,
+    unClaimFakeRealtime: 0,
+  },
+  getters: {
+    power: state => {
+      const power = POWER_INIT + POWER_INVITE * state.inviteCount;
+      return power > POWER_LIMIT ? POWER_LIMIT : power;
+    },
   },
   mutations: {
     setUser(state, address: string) {
       state.address = address;
       state.login =
         address === '0x0000000000000000000000000000000000000000' ? false : true;
+      state.inviteCount = 0;
     },
     setChain(state, chainId: number) {
       state.chainId = chainId;
@@ -30,6 +42,9 @@ export default createStore({
     },
     setInvite(state, inviteCount: number) {
       state.inviteCount = inviteCount;
+    },
+    setMyUnclaimCoins(state, unClaimCoin: number) {
+      state.unClaimCoin = unClaimCoin;
     },
     setMyLastMintTime(state, lastMintTime: number) {
       state.lastMintTime = lastMintTime;
@@ -61,8 +76,6 @@ export default createStore({
       state.unFinishedPower = power;
       setCountDownTime(lastMintTime * 1000 + 24 * 60 * 60 * 1000);
       function setCountDownTime(endDateMilliSeconds: number) {
-        // debugger;
-
         clearInterval(countdownInterval);
         if (endDateMilliSeconds > Date.now()) {
           countdownInterval = setInterval(() => {
@@ -77,6 +90,12 @@ export default createStore({
         const now = Date.now();
         const diffSec = Math.floor((endDateMilliSeconds - now) / 1000);
         state.currentMintingCountDown = formatTimegap(diffSec);
+        const secRound =
+          (state.unFinishedPower *
+            ((endDateMilliSeconds - now) / 24 / 60 / 60)) /
+          1000;
+        state.unClaimFakeRealtime =
+          Math.round((state.unClaimCoin - secRound) * 1000) / 1000;
       }
     },
   },

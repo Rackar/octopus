@@ -86,6 +86,8 @@ const initWeb3 = async () => {
       instanceResult.account = accounts[0];
       store.commit('setUser', instanceResult.account);
       console.log('Account changed:', instanceResult.account);
+
+      reInit();
     }
   }
 
@@ -156,6 +158,13 @@ const initWeb3 = async () => {
   return instanceResult;
 };
 
+async function reInit() {
+  const instance = await getInstaceResult();
+  getMyPastInvites(instance);
+  getMyLastMint(instance);
+  getMyUnclaimCoins();
+}
+
 function listenEvents({ coinContract, nftContract, gameContract, account }) {
   // const mintEvent = gameContract.events
   //   .MintCoin({
@@ -214,7 +223,7 @@ const getMyLastMint = async ({ gameContract, account }) => {
       if (error) {
         console.log(error);
       } else {
-        debugger;
+        // debugger;
         console.log(events);
         const last = events[events.length - 1];
         let lastStartTime = last?.returnValues?.startTime;
@@ -225,8 +234,8 @@ const getMyLastMint = async ({ gameContract, account }) => {
         const toNow = Date.now() - lastStartTime * 1000;
         if (toNow > 0 && toNow < 24 * 60 * 60 * 1000) {
           store.commit('setMyLastMint', {
-            lastStartTime,
-            power: last.returnValues.power,
+            lastMintTime: lastStartTime,
+            power: parseInt(last.returnValues.power),
           });
         }
       }
@@ -256,9 +265,10 @@ const getMyPastInvites = async ({ gameContract, account }) => {
   );
 };
 
-function getMyUnclaimCoins(instance) {
-  let coins = getCoins(instance);
+async function getMyUnclaimCoins() {
+  let coins = await getCoins();
   coins = coins && parseInt(coins);
+  // debugger;
   store.commit('setMyUnclaimCoins', coins);
 }
 
@@ -270,7 +280,7 @@ const requestLoginMetamask = async () => {
       console.log(data);
       getMyPastInvites(instance);
       getMyLastMint(instance);
-      getMyUnclaimCoins(instance);
+      getMyUnclaimCoins();
     })
     .catch(err => {
       if (err.code === 4001) {
