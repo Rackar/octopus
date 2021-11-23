@@ -11,22 +11,20 @@ const routes: Array<RouteRecordRaw> = [
     path: '/logs',
     name: 'logs',
 
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../pages/logs.vue'),
+    component: () => import(/* webpackChunkName: "logs" */ '../pages/logs.vue'),
   },
   {
     path: '/market',
     name: 'market',
 
     component: () =>
-      import(/* webpackChunkName: "about" */ '../pages/market.vue'),
+      import(/* webpackChunkName: "market" */ '../pages/market.vue'),
   },
   {
     path: '/mint',
     name: 'mint',
 
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../pages/mint.vue'),
+    component: () => import(/* webpackChunkName: "mint" */ '../pages/mint.vue'),
   },
   {
     path: '/about',
