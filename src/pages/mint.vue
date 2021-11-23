@@ -47,7 +47,7 @@
               cursor-pointer
               select-none
             "
-            @click="info.showPopup = !info.showPopup"
+            @click="btnClaim"
             >Claim</span
           >
           OCGT:{{ store.state.unClaimCoin - store.state.unFinishedPower }}
@@ -60,9 +60,34 @@
             >(Current Minting: {{ store.state.unClaimFakeRealtime }})</span
           >
         </div>
-        <Popup v-if="info.showPopup" :TogglePopup="() => TogglePopup()"
-          >this is popup content</Popup
-        >
+        <Popup v-model="info.showClaimPopup">
+          <div>
+            <div>
+              <div>
+                Claim limit :
+                {{ store.state.unClaimCoin - store.state.unFinishedPower }}
+              </div>
+              <input type="number" v-model="info.userClaimInput" />
+              <button
+                class="
+                  border-success-200
+                  p-1
+                  border-solid
+                  rounded-md
+                  border-2
+                  px-3
+                  mx-5
+                  my-2
+                  cursor-pointer
+                  select-none
+                "
+                @click="btnClaimCoin"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </Popup>
         <div class="my-4">
           <span
             class="
@@ -111,7 +136,7 @@ import { requestLoginMetamask } from '../js/web3/index';
 
 // import { requestLoginMetaMask } from "../js/web3/getWeb3";
 
-import { mintCoin } from '../js/web3/gameMethods';
+import { mintCoin, claimCoin } from '../js/web3/gameMethods';
 
 import Popup from '../plugins/Popup.vue';
 
@@ -137,9 +162,11 @@ const info = reactive({
   currentMintingCountDown: '',
 
   copied: false,
-  activeComponent: false,
 
-  showPopup: false,
+  showClaimPopup: false,
+  userClaimInput: 0,
+
+  showWarning: false,
 });
 
 onMounted(async () => {
@@ -149,9 +176,9 @@ onMounted(async () => {
   // mintStarted('');
 });
 
-function TogglePopup() {
-  info.showPopup = !info.showPopup;
-}
+// function TogglePopup() {
+//   info.showPopup = !info.showPopup;
+// }
 
 async function btnInvite() {
   if (!walletLogined()) {
@@ -224,6 +251,33 @@ function checkCanMintNow() {
   });
 }
 
+async function btnClaim() {
+  if (!walletLogined()) {
+    await requestLoginMetamask();
+  }
+
+  info.showClaimPopup = !info.showClaimPopup;
+}
+
+async function btnClaimCoin() {
+  const { userClaimInput } = info;
+
+  if (userClaimInput > store.state.unClaimCoin - store.state.unFinishedPower) {
+    info.showWarning = true;
+    return;
+  }
+
+  if (await checkCanMintNow()) {
+    claimCoin({
+      amount: userClaimInput,
+      myAccount: store.state.address,
+    }).then((res: any) => {
+      console.log(res);
+    });
+  } else {
+    console.log('can not mint now');
+  }
+}
 // let countdownInterval: any;
 // function setCountDownTime(endDateMilliSeconds: number) {
 //   clearInterval(countdownInterval);
