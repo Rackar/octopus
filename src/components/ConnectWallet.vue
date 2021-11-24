@@ -1,5 +1,5 @@
 <template>
-  <span class="absolute right-4 top-2 text-md">
+  <span class="right-4 top-2 text-md min-w-max whitespace-nowrap">
     <span
       v-if="!store.state.login"
       class="
@@ -17,7 +17,7 @@
     <span v-else class="text-sm">{{
       store.state.address.substr(0, 5) +
       '...' +
-      store.state.address.substr(-3, 5)
+      store.state.address.substr(-4, 5)
     }}</span>
   </span>
 </template>

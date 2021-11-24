@@ -26,19 +26,27 @@ const instanceResult = {
   gameContract: null,
 };
 
-async function manuallyChangeChainId(chainId = 0x2a, provider) {
+async function switchChain(chainId = '0x2a', provider) {
   try {
     await provider.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId }],
     });
+
+    reInit();
   } catch (switchError) {
     // This error code indicates that the chain has not been added to MetaMask.
     if (switchError.code === 4902) {
       try {
         await provider.request({
           method: 'wallet_addEthereumChain',
-          params: [{ chainId: '0xf00', rpcUrl: 'https://...' /* ... */ }],
+          params: [
+            {
+              chainId: '0xf00',
+              chainName: 'Kovan Test net',
+              rpcUrls: [''],
+            },
+          ],
         });
       } catch (addError) {
         // handle "add" error
@@ -92,15 +100,19 @@ const initWeb3 = async () => {
   }
 
   async function handleChainChanged(_chainId) {
-    const ALLOWED_CHAIN_IDS = [1, 3, 4, 5, 42, 0x2a, 0x38];
+    // const ALLOWED_CHAIN_IDS = [1, 3, 4, 5, 42, '0x2a', '0x38'];
+    const ALLOWED_CHAIN_IDS = ['0x2a'];
     console.log('chain changed to', _chainId);
     if (!ALLOWED_CHAIN_IDS.includes(_chainId)) {
       console.log('chain wrong');
+      switchChain('0x2a', provider);
+      return;
     }
 
     instanceResult.chainId = _chainId;
 
     store.commit('setChain', _chainId);
+    reInit();
     // We recommend reloading the page, unless you must do otherwise
     // window.location.reload();
   }
@@ -299,9 +311,4 @@ const requestLoginMetamask = async () => {
     });
 };
 
-export {
-  initWeb3,
-  getInstaceResult,
-  manuallyChangeChainId,
-  requestLoginMetamask,
-};
+export { initWeb3, getInstaceResult, switchChain, requestLoginMetamask };
