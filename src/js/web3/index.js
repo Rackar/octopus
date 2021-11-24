@@ -193,11 +193,13 @@ function listenEvents({ coinContract, nftContract, gameContract, account }) {
       }
 
       console.log(event);
-      const count =
-        (event?.returnValues?.invitedCount &&
-          parseInt(event.returnValues.invitedCount)) ||
-        0;
-      store.commit('setInvite', count);
+      if (event?.returnValues?.invitingAddress === account) {
+        const count =
+          (event?.returnValues?.invitedCount &&
+            parseInt(event.returnValues.invitedCount)) ||
+          0;
+        store.commit('setInvite', count);
+      }
     }
   );
   // .on('data', event => {
@@ -237,6 +239,11 @@ const getMyLastMint = async ({ gameContract, account }) => {
             lastMintTime: lastStartTime,
             power: parseInt(last.returnValues.power),
           });
+        } else {
+          store.commit('setMyLastMint', {
+            lastMintTime: 0,
+            power: 0,
+          });
         }
       }
     }
@@ -268,7 +275,6 @@ const getMyPastInvites = async ({ gameContract, account }) => {
 async function getMyUnclaimCoins() {
   let coins = await getCoins();
   coins = coins && parseInt(coins);
-  // debugger;
   store.commit('setMyUnclaimCoins', coins);
 }
 

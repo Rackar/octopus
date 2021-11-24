@@ -11,7 +11,7 @@
       >
         <img
           class="md:rounded-none rounded-full"
-          src="/img/octopus.jpg"
+          :src="'/img/panda' + i + '.png'"
           alt=""
           width="400"
           height="300"

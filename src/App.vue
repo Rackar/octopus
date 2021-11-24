@@ -2,7 +2,7 @@
   <div>
     <div class="container gird text-green-500 text-lg">
       <h1 class="font-bold text-5xl py-4 text-green-400 select-none">
-        Octopus Game #1
+        Octopus Game #1 DEMO
       </h1>
       <div class="py-8 text-3xl font-bold flex flex-wrap">
         <router-link

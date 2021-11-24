@@ -211,6 +211,10 @@ async function btnMintCoin() {
     }).then((res: any) => {
       console.log(res);
       const { startTime, power } = res.events.MintCoin.returnValues;
+      store.commit(
+        'setMyUnclaimCoins',
+        store.state.unClaimCoin + parseInt(power)
+      );
       mintStarted({ startTime, power });
     });
   } else {
