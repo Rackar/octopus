@@ -1,4 +1,4 @@
-const address_GAME = '0x8682a3FCD4225b1dabF39c73FF948A755f7A965F';
+const address_GAME = '0x3150a4C254c2BbFd1C63791B85a4fBEa672d5619'; //1125 game
 const ABI_GAME = [
   {
     inputs: [
@@ -99,6 +99,30 @@ const ABI_GAME = [
     ],
     name: 'joinMatch',
     outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_power',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: '_whoInviteMe',
+        type: 'address',
+      },
+    ],
+    name: 'mintCoin',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
     stateMutability: 'payable',
     type: 'function',
   },
@@ -257,30 +281,6 @@ const ABI_GAME = [
     type: 'event',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_power',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address',
-        name: '_whoInviteMe',
-        type: 'address',
-      },
-    ],
-    name: 'mintCoin',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -323,6 +323,19 @@ const ABI_GAME = [
     ],
     name: 'OwnershipTransferred',
     type: 'event',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_token',
+        type: 'address',
+      },
+    ],
+    name: 'resetToken',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
@@ -406,7 +419,7 @@ const ABI_GAME = [
         type: 'address',
       },
     ],
-    name: 'allPlayers',
+    name: 'alreadyInPlayer',
     outputs: [
       {
         internalType: 'bool',
@@ -565,6 +578,19 @@ const ABI_GAME = [
   {
     inputs: [],
     name: 'getNow',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getTokenBalance',
     outputs: [
       {
         internalType: 'uint256',

@@ -7,18 +7,19 @@ import { weiToCount, countToWei } from './Utils';
 //给新版本的合约发币
 function transferToGame() {
   return new Promise((resolve, reject) => {
-    const ins = getInstaceResult();
-    ins.coinContract.methods
-      .transfer(address_GAME, 10000000000)
-      .send({ from: ins.account })
-      .then(result => {
-        console.log(`new contract: ${JSON.stringify(result)}`);
-        resolve(result);
-      })
-      .catch(e => {
-        console.log(e);
-        reject(e);
-      });
+    getInstaceResult().then(ins => {
+      ins.coinContract.methods
+        .transfer(address_GAME, 1000000000)
+        .send({ from: ins.account })
+        .then(result => {
+          console.log(`new contract: ${JSON.stringify(result)}`);
+          resolve(result);
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
+    });
   });
 }
 

@@ -1,4 +1,5 @@
 import { createStore } from 'vuex';
+import Web3 from 'web3';
 const POWER_INIT = 500;
 const POWER_INVITE = 100;
 const POWER_LIMIT = 1500;
@@ -26,7 +27,7 @@ export default createStore({
   },
   mutations: {
     setUser(state, address: string) {
-      state.address = address;
+      state.address = Web3.utils.toChecksumAddress(address);
       state.login =
         address === '0x0000000000000000000000000000000000000000' ? false : true;
       state.inviteCount = 0;

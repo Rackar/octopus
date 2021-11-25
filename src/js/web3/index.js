@@ -91,7 +91,7 @@ const initWeb3 = async () => {
       instanceResult.account = '0x0000000000000000000000000000000000000000';
       store.commit('setUser', instanceResult.account);
     } else if (accounts[0] !== currentAccount) {
-      instanceResult.account = accounts[0];
+      instanceResult.account = Web3.utils.toChecksumAddress(accounts[0]);
       store.commit('setUser', instanceResult.account);
       console.log('Account changed:', instanceResult.account);
 
@@ -194,7 +194,7 @@ function listenEvents({ coinContract, nftContract, gameContract, account }) {
 
   const inviteEvent = gameContract.events.InviteSuccess(
     {
-      filter: { invitingAddress: account },
+      filter: { invitingAddress: Web3.utils.toChecksumAddress(account) },
 
       fromBlock: 0,
     },
@@ -205,7 +205,10 @@ function listenEvents({ coinContract, nftContract, gameContract, account }) {
       }
 
       console.log(event);
-      if (event?.returnValues?.invitingAddress === account) {
+      if (
+        event?.returnValues?.invitingAddress ===
+        Web3.utils.toChecksumAddress(account)
+      ) {
         const count =
           (event?.returnValues?.invitedCount &&
             parseInt(event.returnValues.invitedCount)) ||
@@ -228,7 +231,7 @@ const getMyLastMint = async ({ gameContract, account }) => {
     'MintCoin',
     {
       filter: {
-        user: account,
+        user: Web3.utils.toChecksumAddress(account),
       },
       fromBlock: 0,
       toBlock: 'latest', //必须要有from 和 to， 否则报错
@@ -267,7 +270,7 @@ const getMyPastInvites = async ({ gameContract, account }) => {
     'InviteSuccess',
     {
       filter: {
-        invitingAddress: account,
+        invitingAddress: Web3.utils.toChecksumAddress(account),
       },
       fromBlock: 0,
       toBlock: 'latest', //必须要有from 和 to， 否则报错
