@@ -1,4 +1,4 @@
-const address_GAME = '0x3150a4C254c2BbFd1C63791B85a4fBEa672d5619'; //1125 game
+const address_GAME = '0x548bd0e22605B98a0732A16bf91A6b1F441E4C0b'; //1125 game
 const ABI_GAME = [
   {
     inputs: [
@@ -99,7 +99,7 @@ const ABI_GAME = [
     ],
     name: 'joinMatch',
     outputs: [],
-    stateMutability: 'payable',
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {

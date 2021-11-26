@@ -194,7 +194,7 @@ function listenEvents({ coinContract, nftContract, gameContract, account }) {
 
   const inviteEvent = gameContract.events.InviteSuccess(
     {
-      filter: { invitingAddress: Web3.utils.toChecksumAddress(account) },
+      filter: { invitingAddress: account },
 
       fromBlock: 0,
     },

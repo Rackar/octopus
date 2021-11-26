@@ -67,6 +67,54 @@ function getCoins() {
   });
 }
 
+function joinMatch({ matchId, color, lucky }) {
+  return new Promise((resolve, reject) => {
+    getInstaceResult().then(({ gameContract, account }) => {
+      debugger;
+      gameContract.methods
+        .joinMatch(matchId, color, lucky)
+        .send({ from: account })
+        .then(result => {
+          // debugger;
+          console.log(JSON.stringify(result));
+          resolve(result);
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
+    });
+  });
+}
+
+function manageCreateNewMatch() {
+  return new Promise((resolve, reject) => {
+    const nowSec = Math.floor(Date.now() / 1000);
+    const joinStart = nowSec + 60;
+    const joinEnd = nowSec + 60 * 5;
+
+    const startTime = nowSec + 60 * 10;
+
+    const PlayerLimit = 1000;
+
+    getInstaceResult().then(({ gameContract, account }) => {
+      debugger;
+      gameContract.methods
+        .createNewMatch(joinStart, joinEnd, startTime, PlayerLimit)
+        .send({ from: account })
+        .then(result => {
+          // debugger;
+          console.log(JSON.stringify(result));
+          resolve(result);
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
+    });
+  });
+}
+
 // function checkIsOwner() {
 //   return new Promise((resolve, reject) => {
 //     web3instance.dnftContract.methods
@@ -276,4 +324,4 @@ function getCoins() {
 //   });
 // }
 
-export { mintCoin, getCoins, claimCoin };
+export { mintCoin, getCoins, claimCoin, joinMatch, manageCreateNewMatch };

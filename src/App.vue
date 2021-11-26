@@ -12,7 +12,7 @@
           justify-between
         "
       >
-        <span> Octopus Game #1 DEMO</span>
+        <span> Octopus Game #1 <span class="text-lg">testnet demo</span></span>
         <span> <ConnectWallet /></span>
       </h1>
       <div class="py-8 text-3xl font-bold flex flex-wrap">

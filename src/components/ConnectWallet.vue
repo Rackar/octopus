@@ -49,6 +49,7 @@ import { useStore } from 'vuex';
 
 import { requestLoginMetamask } from '../js/web3/index';
 import { transferToGame } from '../js/web3/coinMethods';
+import { manageCreateNewMatch } from '../js/web3/gameMethods';
 const store = useStore();
 
 async function connect() {
@@ -56,6 +57,7 @@ async function connect() {
 }
 
 async function transToGame() {
-  await transferToGame();
+  // await transferToGame();
+  await manageCreateNewMatch();
 }
 </script>

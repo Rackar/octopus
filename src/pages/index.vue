@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, Ref, reactive, computed, nextTick, onMounted } from 'vue';
 
+import { joinMatch } from '../js/web3/gameMethods';
+
 const flow = reactive({
   typing: '',
   showButton: false,
@@ -99,6 +101,11 @@ function chechTypingClass(name: string) {
 
 function checkSelected(type: 'in' | 'color' | 'lucky', value: string) {
   return selected[type] === value ? 'selectedBtn' : '';
+}
+
+function btnJoin() {
+  const matchId = 1;
+  joinMatch({ matchId, color: selected.color, lucky: selected.lucky });
 }
 </script>
 
@@ -240,7 +247,7 @@ function checkSelected(type: 'in' | 'color' | 'lucky', value: string) {
 
         <div v-show="flow.showLast">
           <p class="pt-4">
-            Connect to you wallet:
+            Confirm join(cost 500 OCGT):
             <span
               class="
                 border-success-200
@@ -253,7 +260,8 @@ function checkSelected(type: 'in' | 'color' | 'lucky', value: string) {
                 cursor-pointer
                 select-none
               "
-              >MetaMask(coming soon)</span
+              @click="btnJoin"
+              >Join match</span
             >
           </p>
 
