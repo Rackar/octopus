@@ -44,9 +44,11 @@
         cursor-pointer
         select-none
       "
-      >Details</span
+      @click="goDetails(0)"
+      >Replay Details</span
     >
-    <div class="h-96 overflow-y-scroll">
+    <span>This match result is color: blue, lucky number:2</span>
+    <div class="h-96 overflow-y-scroll md:w-3/6">
       <transition-group
         name="staggered-fade"
         tag="ul"
@@ -55,8 +57,14 @@
         @enter="enter"
         @leave="leave"
       >
-        <div v-for="line in logs.address" :key="line.id">
-          COLOR:{{ line.color }} {{ line.address }}
+        <div
+          v-for="line in logs.address"
+          :key="line.id"
+          :style="'color:' + line.color"
+          :class="{ winner: line.address === logs.winner }"
+          class="flex"
+        >
+          COLOR:{{ line.color }} Lucky:{{ line.lucky }} {{ line.address }}
         </div>
       </transition-group>
     </div>
@@ -64,39 +72,98 @@
 </template>
 <script setup lang="ts">
 import { ref, Ref, reactive, computed, nextTick } from 'vue';
-// import gsap from "gsap";
+import gsap from 'gsap';
 
 const array = new Array(1000).fill(0).map((_, i) => {
   return {
     id: i,
     address: `0x09dsfdjlasfiwer0dfk${i.toString()}`,
-    lucky: i % 10,
-    color: i % 3 === 0 ? 'R' : i % 3 === 1 ? 'G' : 'B',
+    lucky: (i % 10).toString(),
+    color: i % 3 === 0 ? 'red' : i % 3 === 1 ? 'green' : 'blue',
   };
 });
 
 const logs = reactive({
   address: array,
+  winner: '',
+  animating: false,
 });
 
-// function beforeEnter(el: any) {
-//   el.style.opacity = 0
-//   el.style.height = 0
-// };
-// function enter(el: any, done: gsap.Callback) {
-//   gsap.to(el, {
-//     opacity: 1,
-//     height: '1.6em',
-//     delay: el.dataset.index * 0.15,
-//     onComplete: done
-//   })
-// };
-// function leave(el: any, done: gsap.Callback) {
-//   gsap.to(el, {
-//     opacity: 0,
-//     height: 0,
-//     delay: el.dataset.index * 0.15,
-//     onComplete: done
-//   })
-// }
+function reinitLog(id: number) {
+  console.log(id);
+  logs.address = array;
+  setWinner('');
+}
+
+async function goDetails(id: number) {
+  console.log(id);
+  if (logs.animating) {
+    return;
+  }
+
+  reinitLog(id);
+
+  logs.animating = true;
+  await wait(1);
+  logs.address = filterBannedColor('red');
+
+  await wait(1.5);
+  logs.address = filterBannedColor('green');
+
+  await wait(2);
+  logs.address = filterLucky('2');
+
+  await wait(1.5);
+  setWinner('0x09dsfdjlasfiwer0dfk2');
+  logs.animating = false;
+}
+
+function wait(seconds: number) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(null);
+    }, seconds * 1000);
+  });
+}
+
+function setWinner(winner: string) {
+  logs.winner = winner;
+}
+
+function filterBannedColor(bannedColor: string) {
+  return logs.address.filter(line => line.color !== bannedColor);
+}
+
+function filterLucky(lucky: string) {
+  return logs.address.filter(line => line.lucky === lucky);
+}
+
+function beforeEnter(el: any) {
+  el.style.opacity = 0;
+  el.style.height = 0;
+}
+
+function enter(el: any, done: gsap.Callback) {
+  gsap.to(el, {
+    opacity: 1,
+    height: '1.6em',
+    delay: el.dataset.index * 0.15,
+    onComplete: done,
+  });
+}
+
+function leave(el: any, done: gsap.Callback) {
+  gsap.to(el, {
+    opacity: 0,
+    height: 0,
+    delay: el.dataset.index * 0.15,
+    onComplete: done,
+  });
+}
 </script>
+<style scoped>
+.winner {
+  font-weight: bold;
+  border: 1px solid red;
+}
+</style>
