@@ -309,10 +309,15 @@ const requestLoginMetamask = async () => {
   await instance.provider
     .request({ method: 'eth_requestAccounts' })
     .then(data => {
-      console.log(data);
-      getMyPastInvites(instance);
-      getMyLastMint(instance);
-      getMyUnclaimCoins();
+      if (
+        data.length &&
+        data[0] &&
+        Web3.utils.toChecksumAddress(data[0]) != instance.account
+      ) {
+        getMyPastInvites(instance);
+        getMyLastMint(instance);
+        getMyUnclaimCoins();
+      }
     })
     .catch(err => {
       if (err.code === 4001) {
