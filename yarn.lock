@@ -5236,7 +5236,7 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
 
 gsap@^3.8.0:
   version "3.8.0"
-  resolved "https://registry.npmmirror.com/gsap/download/gsap-3.8.0.tgz#a404dd6ebbaabc92605539aea9d98e3098688064"
+  resolved "https://registry.npmmirror.com/gsap/download/gsap-3.8.0.tgz?cache=0&sync_timestamp=1632902708570&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fgsap%2Fdownload%2Fgsap-3.8.0.tgz#a404dd6ebbaabc92605539aea9d98e3098688064"
   integrity sha1-pATdbruqvJJgVTmuqdmOMJhogGQ=
 
 gzip-size@^5.0.0:

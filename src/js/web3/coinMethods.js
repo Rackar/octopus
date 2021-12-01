@@ -2,7 +2,7 @@ import Web3 from 'web3';
 // import { web3instance } from './getWeb3';
 import { address_GAME } from '../contract/GAME_ABI';
 import { getInstaceResult } from './index';
-import { weiToCount, countToWei } from './Utils';
+import { weiToCount, finneyToWei } from './Utils';
 
 //给新版本的合约发币
 function transferToGame() {

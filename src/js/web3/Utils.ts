@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 
-function countToWei(number = 1): string {
+function finneyToWei(number = 1): string {
   //FIXED 修复了js浮点数精度问题。 18*0.001 === 0.01800000000002
   return Web3.utils.toWei((Math.round(number) / 1000).toString());
 }
@@ -81,4 +81,4 @@ function weiToCount(amount = ''): string {
 //   };
 // }
 
-export { countToWei, weiToCount };
+export { finneyToWei, weiToCount };

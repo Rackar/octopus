@@ -18,6 +18,7 @@
       Congratulation! You can get you reward.
       <span
         class="
+          line-through
           border-success-200
           p-1
           border-solid

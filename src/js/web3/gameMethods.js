@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 // import { web3instance } from './getWeb3';
 import { getInstaceResult } from './index';
-import { weiToCount, countToWei } from './Utils';
+import { weiToCount, finneyToWei } from './Utils';
 import { address_GAME } from '../contract';
 const config = {
   defaultSellLastingSecends: 86400,
@@ -15,7 +15,26 @@ function mintCoin({ power, whoInviteMe, myAccount }) {
       // debugger;
       gameContract.methods
         .mintCoin(power, whoInviteMe)
-        .send({ from: myAccount, value: countToWei(1) })
+        .send({ from: myAccount })
+        .then(result => {
+          // debugger;
+          console.log(JSON.stringify(result));
+          resolve(result);
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
+    });
+  });
+}
+
+function buyCoin({ amount }) {
+  return new Promise((resolve, reject) => {
+    getInstaceResult().then(({ gameContract, account }) => {
+      gameContract.methods
+        .buyCoin()
+        .send({ from: account, value: finneyToWei(amount * 1000) })
         .then(result => {
           // debugger;
           console.log(JSON.stringify(result));
@@ -295,7 +314,7 @@ function manageCreateNewMatch() {
 //       .dNFTbuyer(dNFTid)
 //       .send({
 //         from: web3instance.account,
-//         value: countToWei(number),
+//         value: finneyToWei(number),
 //       })
 //       .then(result => {
 //         console.log(`dNFT buy status: ${JSON.stringify(result)}`);
@@ -324,4 +343,11 @@ function manageCreateNewMatch() {
 //   });
 // }
 
-export { mintCoin, getCoins, claimCoin, joinMatch, manageCreateNewMatch };
+export {
+  mintCoin,
+  buyCoin,
+  getCoins,
+  claimCoin,
+  joinMatch,
+  manageCreateNewMatch,
+};

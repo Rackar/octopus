@@ -1,7 +1,53 @@
 <template>
   <div>
     <h3 class="">TOKEN:</h3>
-    <div>Buy OCT</div>
+    <div>
+      <span
+        @click="btnBuyCoin"
+        class="
+          border-success-200
+          p-1
+          border-solid
+          rounded-md
+          border-2
+          px-3
+          mx-5
+          my-2
+          cursor-pointer
+          select-none
+        "
+      >
+        Buy OCT
+      </span>
+    </div>
+
+    <Popup v-model="info.showClaimPopup">
+      <div>
+        <div>
+          How much OCGT would you buy? Exchange rate (1000000 OCGT: 1 ETH)
+        </div>
+        <div>
+          <input type="number" v-model="info.userClaimInput" />
+          <button
+            class="
+              border-success-200
+              p-1
+              border-solid
+              rounded-md
+              border-2
+              px-3
+              mx-5
+              my-2
+              cursor-pointer
+              select-none
+            "
+            @click="btnConfirmBuyCoin"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </Popup>
     <h3 class="mt-6">NFT:</h3>
     <div class="grid grid-cols-1 lg:grid-cols-2">
       <figure
@@ -30,3 +76,23 @@
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import { reactive } from '@vue/reactivity';
+import Popup from '../plugins/Popup.vue';
+import { buyCoin } from '../js/web3/gameMethods';
+
+const info = reactive({
+  showClaimPopup: false,
+  userClaimInput: 0,
+});
+
+function btnBuyCoin() {
+  console.log('');
+  info.showClaimPopup = true;
+}
+
+function btnConfirmBuyCoin() {
+  const RATE = 1000000;
+  buyCoin((info.userClaimInput / RATE) * 1000);
+}
+</script>
