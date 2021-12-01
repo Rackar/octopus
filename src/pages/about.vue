@@ -4,7 +4,7 @@
     <div>Using small token to get in, earn the biggest reward for fun.</div>
     <div class="my-6">
       <div>
-        Each game player transfer at least 1000 OCGT(Octopus Game Token) to the
+        Each game player transfer at least 500 OCGT(Octopus Game Token) to the
         game pool, pick the Color(1 in 3) and Lucky Number(LN)(1 in 10).
       </div>
       <div>

@@ -246,6 +246,7 @@ function btnJoin() {
         </div>
 
         <div v-show="flow.showLast">
+          <div>You could buy some OCGT from market first.</div>
           <p class="pt-4">
             Confirm join(cost 500 OCGT):
             <span

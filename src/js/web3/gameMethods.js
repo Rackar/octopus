@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import { getInstaceResult } from './index';
 import { weiToCount, finneyToWei } from './Utils';
 import { address_GAME } from '../contract';
+import { approve } from './coinMethods';
 const config = {
   defaultSellLastingSecends: 86400,
   defaultUnitPrice: Web3.utils.toWei((0.001).toString()),
@@ -92,19 +93,26 @@ function getCoins() {
 
 function joinMatch({ matchId, color, lucky }) {
   return new Promise((resolve, reject) => {
-    getInstaceResult().then(({ gameContract, account }) => {
+    getInstaceResult().then(({ gameContract, coinContract, account }) => {
       debugger;
-      gameContract.methods
-        .joinMatch(matchId, color, lucky)
+
+      coinContract.methods
+        .approve(address_GAME, finneyToWei(100000 * 1000))
         .send({ from: account })
-        .then(result => {
-          // debugger;
-          console.log(JSON.stringify(result));
-          resolve(result);
-        })
-        .catch(e => {
-          console.log(e);
-          reject(e);
+        .then(res => {
+          debugger;
+          gameContract.methods
+            .joinMatch(matchId, color, lucky)
+            .send({ from: account })
+            .then(result => {
+              // debugger;
+              console.log(JSON.stringify(result));
+              resolve(result);
+            })
+            .catch(e => {
+              console.log(e);
+              reject(e);
+            });
         });
     });
   });

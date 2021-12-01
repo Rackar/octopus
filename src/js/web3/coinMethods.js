@@ -23,6 +23,23 @@ function transferToGame() {
   });
 }
 
+function approve(amount = 500) {
+  return new Promise((resolve, reject) => {
+    getInstaceResult().then(({ coinContract, account }) => {
+      coinContract.methods
+        .approve(address_GAME, amount)
+        .send({ from: account })
+        .then(result => {
+          resolve(result);
+        })
+        .catch(e => {
+          console.log(e);
+          reject(e);
+        });
+    });
+  });
+}
+
 //判断是否领取过
 function dNFTidToAccountToFetched(dnftid, address_User) {
   return new Promise((resolve, reject) => {
@@ -57,4 +74,4 @@ function fetchLOLI(dnftid) {
   });
 }
 
-export { transferToGame };
+export { transferToGame, approve };

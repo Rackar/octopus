@@ -17,8 +17,26 @@
           select-none
         "
       >
-        Buy OCT
+        Buy OCGT
       </span>
+    </div>
+    <div class="mt-2">
+      <a
+        class="
+          border-success-200
+          p-1
+          border-solid
+          rounded-md
+          border-2
+          px-3
+          mx-5
+          my-2
+          cursor-pointer
+          select-none
+        "
+        href="https://github.com/kovan-testnet/faucet"
+        >Kovan faucet to get test-net ETH</a
+      >
     </div>
 
     <Popup v-model="info.showClaimPopup">
@@ -83,7 +101,7 @@ import { buyCoin } from '../js/web3/gameMethods';
 
 const info = reactive({
   showClaimPopup: false,
-  userClaimInput: 0,
+  userClaimInput: 1000,
 });
 
 function btnBuyCoin() {
