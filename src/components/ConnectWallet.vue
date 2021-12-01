@@ -57,7 +57,7 @@ async function connect() {
 }
 
 async function transToGame() {
-  // await transferToGame();
+  await transferToGame();
   await manageCreateNewMatch();
 }
 </script>

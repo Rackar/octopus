@@ -93,6 +93,6 @@ function btnBuyCoin() {
 
 function btnConfirmBuyCoin() {
   const RATE = 1000000;
-  buyCoin((info.userClaimInput / RATE) * 1000);
+  buyCoin({ amount: (info.userClaimInput / RATE) * 1000 });
 }
 </script>

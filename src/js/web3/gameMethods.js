@@ -34,7 +34,7 @@ function buyCoin({ amount }) {
     getInstaceResult().then(({ gameContract, account }) => {
       gameContract.methods
         .buyCoin()
-        .send({ from: account, value: finneyToWei(amount * 1000) })
+        .send({ from: account, value: finneyToWei(amount) })
         .then(result => {
           // debugger;
           console.log(JSON.stringify(result));
