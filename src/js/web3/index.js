@@ -33,7 +33,7 @@ async function switchChain(chainId = '0x2a', provider) {
       params: [{ chainId }],
     });
 
-    reInit();
+    // reInit();
   } catch (switchError) {
     // This error code indicates that the chain has not been added to MetaMask.
     if (switchError.code === 4902) {
@@ -60,6 +60,7 @@ async function getInstaceResult() {
   if (instanceResult.init) {
     return instanceResult;
   } else {
+    instanceResult.init = true;
     return await initWeb3();
   }
 }
@@ -82,19 +83,18 @@ const initWeb3 = async () => {
     );
   }
 
-  const currentAccount = '';
-
   function handleAccountsChanged(accounts) {
-    if (accounts.length === 0) {
+    if (accounts.length === 0 || !accounts[0]) {
       // MetaMask is locked or the user has not connected any accounts
       console.log('Please connect to MetaMask.');
       instanceResult.account = '0x0000000000000000000000000000000000000000';
       store.commit('setUser', instanceResult.account);
-    } else if (accounts[0] !== currentAccount) {
+    } else if (
+      Web3.utils.toChecksumAddress(accounts[0]) !== instanceResult.account
+    ) {
       instanceResult.account = Web3.utils.toChecksumAddress(accounts[0]);
       store.commit('setUser', instanceResult.account);
       console.log('Account changed:', instanceResult.account);
-
       reInit();
     }
   }
@@ -191,8 +191,11 @@ function listenEvents({ coinContract, nftContract, gameContract, account }) {
   //     // remove event from local database
   //   })
   //   .on('error', console.error);
+  if (!account) {
+    return;
+  }
 
-  const inviteEvent = gameContract.events.InviteSuccess(
+  gameContract.events.InviteSuccess(
     {
       filter: { invitingAddress: account },
 
@@ -227,6 +230,10 @@ function listenEvents({ coinContract, nftContract, gameContract, account }) {
 }
 
 const getMyLastMint = async ({ gameContract, account }) => {
+  if (!account) {
+    return;
+  }
+
   gameContract.getPastEvents(
     'MintCoin',
     {
@@ -266,6 +273,10 @@ const getMyLastMint = async ({ gameContract, account }) => {
 };
 
 const getMyPastInvites = async ({ gameContract, account }) => {
+  if (!account) {
+    return;
+  }
+
   gameContract.getPastEvents(
     'InviteSuccess',
     {
@@ -314,4 +325,4 @@ const requestLoginMetamask = async () => {
     });
 };
 
-export { initWeb3, getInstaceResult, switchChain, requestLoginMetamask };
+export { getInstaceResult, switchChain, requestLoginMetamask };

@@ -70,6 +70,10 @@ function claimCoin({ amount, myAccount }) {
 function getCoins() {
   return new Promise((resolve, reject) => {
     getInstaceResult().then(({ gameContract, account }) => {
+      if (!account) {
+        return;
+      }
+
       gameContract.methods
         .coinCanClaim(account)
         .call()
