@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, Ref, reactive, computed, nextTick, onMounted } from 'vue';
+import { ref, Ref, reactive, computed, nextTick, onMounted } from "vue";
 
-import { joinMatch } from '../js/web3/gameMethods';
+import { joinMatch } from "../js/web3/gameMethods";
 
 const flow = reactive({
-  typing: '',
+  typing: "",
   showButton: false,
   showColor: false,
   showLucky: false,
@@ -13,16 +13,16 @@ const flow = reactive({
 });
 
 const selected = reactive({
-  in: '',
-  color: '',
-  lucky: '',
+  in: "",
+  color: "",
+  lucky: "",
 });
 
 //fixed string
-const str_time = ref('');
-const questionStart = ref('');
-const questionColor = ref('');
-const questionLucky = ref('');
+const str_time = ref("");
+const questionStart = ref("");
+const questionColor = ref("");
+const questionLucky = ref("");
 
 function startTypeLog(text: string, bind: Ref<string>, classFlag: string) {
   return new Promise((resolve, reject) => {
@@ -34,7 +34,7 @@ function startTypeLog(text: string, bind: Ref<string>, classFlag: string) {
         count++;
       } else {
         clearInterval(tick);
-        flow.typing = '';
+        flow.typing = "";
         resolve(true);
       }
     }, 50);
@@ -43,30 +43,30 @@ function startTypeLog(text: string, bind: Ref<string>, classFlag: string) {
 
 onMounted(async () => {
   await startTypeLog(
-    'The next game will start in 2021.12.12 20:00:00 GMT',
+    "The next game will start in 2021.12.25 20:00:00 GMT",
     str_time,
-    'str_time'
+    "str_time"
   );
-  await startTypeLog('Do you want to get in?', questionStart, 'questionStart');
+  await startTypeLog("Do you want to get in?", questionStart, "questionStart");
   flow.showButton = true;
 });
 
 async function getInGame(selectIn: boolean) {
   if (selectIn) {
-    selected.in = 'yes';
+    selected.in = "yes";
 
     if (!flow.showColor) {
       await startTypeLog(
-        'Select your favrite color:',
+        "Select your favrite color:",
         questionColor,
-        'questionColor'
+        "questionColor"
       );
     }
 
     // await nextTick();
     flow.showColor = true;
   } else {
-    selected.in = 'no';
+    selected.in = "no";
   }
 }
 
@@ -76,9 +76,9 @@ async function selectColor(color: string) {
 
     if (!flow.showLucky) {
       await startTypeLog(
-        'Select your lucky number:',
+        "Select your lucky number:",
         questionLucky,
-        'questionLucky'
+        "questionLucky"
       );
     }
 
@@ -96,11 +96,11 @@ async function selectLuckyNumber(num: string) {
 }
 
 function chechTypingClass(name: string) {
-  return flow.typing === name ? 'typing' : '';
+  return flow.typing === name ? "typing" : "";
 }
 
-function checkSelected(type: 'in' | 'color' | 'lucky', value: string) {
-  return selected[type] === value ? 'selectedBtn' : '';
+function checkSelected(type: "in" | "color" | "lucky", value: string) {
+  return selected[type] === value ? "selectedBtn" : "";
 }
 
 function btnJoin() {
